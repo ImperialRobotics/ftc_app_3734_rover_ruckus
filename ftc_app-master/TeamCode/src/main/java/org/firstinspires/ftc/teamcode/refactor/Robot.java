@@ -1,10 +1,12 @@
 package org.firstinspires.ftc.teamcode.refactor;
 
+import com.disnodeteam.dogecv.CameraViewDisplay;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Gamepad;
+import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.PIDCoefficients;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -30,7 +32,8 @@ public class Robot {
     //PID controller, used for driving and turning
     private PIDController pidController;
 
-    //constants for driving and control
+    //GoldMineralDetector for sampling
+    public GoldMineralDetector detector;
 
 
     public Robot(LinearOpMode opMode) {
@@ -54,6 +57,7 @@ public class Robot {
             motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         }
 
+        detector = new GoldMineralDetector();
         pidController = new PIDController(-1.0, 1.0);
         this.opMode = opMode;
     }
@@ -81,13 +85,9 @@ public class Robot {
             opMode.sleep(50);
             opMode.idle();
         }
-    }
 
-    public void handle(Gamepad gamepad1) {
-        double drive = -gamepad1.right_stick_y;
-        double turn = gamepad1.right_stick_x;
-
-
+        detector.init(opMode.hardwareMap.appContext, CameraViewDisplay.getInstance());
+        detector.enable();
     }
 
     //method used for displaying telemetry information during the tele-operated modes
@@ -102,6 +102,7 @@ public class Robot {
         opMode.telemetry.addData("Motors", "left: (%.2f), right: (%.2f), strafe: (%.2f), lift: (%.2f)", leftMotor.getPower(), rightMotor.getPower(), strafeMotor.getPower(), liftMotor.getPower());
         opMode.telemetry.addData("Encoders", "left: (%d), right: (%d), strafe: (%d), lift: (%d)", leftMotor.getCurrentPosition(), rightMotor.getCurrentPosition(), strafeMotor.getCurrentPosition(), liftMotor.getCurrentPosition());
         opMode.telemetry.addData("Targets", "left: (%d), right: (%d), strafe: (%d), lift: (%d)", leftMotor.getTargetPosition(), rightMotor.getTargetPosition(), strafeMotor.getTargetPosition(), liftMotor.getTargetPosition());
+        opMode.telemetry.addData("Gold Position", detector.getScreenPosition());
         opMode.telemetry.update();
     }
 
