@@ -1,4 +1,6 @@
-package org.firstinspires.ftc.teamcode.refactor;
+package org.firstinspires.ftc.teamcode.refactor.utils;
+
+import org.firstinspires.ftc.teamcode.refactor.utils.Constants;
 
 public class Calculator {
     public static int getTicks(double inches) {

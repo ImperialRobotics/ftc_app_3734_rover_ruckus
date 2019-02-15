@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.refactor;
+package org.firstinspires.ftc.teamcode.refactor.robot;
 
 import com.disnodeteam.dogecv.DogeCV;
 import com.disnodeteam.dogecv.detectors.DogeCVDetector;

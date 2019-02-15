@@ -3,10 +3,8 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.HardwareRobot;
+import org.firstinspires.ftc.teamcode.refactor.utils.Constants;
 
 
 @TeleOp(name = "TheTeleOp", group = "TeleOp")
@@ -63,13 +61,11 @@ public class TheTeleOp extends OpMode
 
         hr.motorMiddle.setPower(gamepad1.left_stick_x);
         hr.motorArm.setPower(0);
-        if(gamepad1.left_bumper){
-            hr.motorArm.setPower(-1);        }
-        else{
-            if(gamepad1.right_bumper){
-                hr.motorArm.setPower(1);
-            }
-        }
+
+        if(gamepad1.left_bumper)
+            hr.motorArm.setPower((hr.motorArm.getCurrentPosition() > 0) ? -1 : 0);
+        else if(gamepad1.right_bumper)
+            hr.motorArm.setPower((hr.motorArm.getCurrentPosition() < Constants.MAX_LIFT_TICKS) ? 1 : 0);
 
         if(gamepad1.b){
             hr.servoMarker.setPosition(0.4);
