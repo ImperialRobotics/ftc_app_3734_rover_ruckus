@@ -28,9 +28,9 @@ public class Robot {
     private Orientation lastAngles = new Orientation();
     private double globalAngle, power = .30, correction;
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-    /////////////////////////////////// INITIALIZATION METHODS /////////////////////////////////////
-    ////////////////////////////////////////////////////////////////////////////////////////////////
+    //----------------------------------------------------------------------------------------------
+    // Initialization Methods
+    //----------------------------------------------------------------------------------------------
 
     public Robot(LinearOpMode opMode) {
         leftMotor = opMode.hardwareMap.dcMotor.get("motorLeft");
@@ -88,9 +88,9 @@ public class Robot {
         intake.setPower(0.0, 0.0, 0.0);
     }
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-    //////////////////////////////////////// TELEMETRY /////////////////////////////////////////////
-    ////////////////////////////////////////////////////////////////////////////////////////////////
+    //----------------------------------------------------------------------------------------------
+    // Telemetry
+    //----------------------------------------------------------------------------------------------
 
     public void telemetry() {
         //drivetrain and lift motor powers
@@ -125,9 +125,9 @@ public class Robot {
         opMode.telemetry.update();
     }
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-    ////////////////////////////////////// HELPER METHODS //////////////////////////////////////////
-    ////////////////////////////////////////////////////////////////////////////////////////////////
+    //----------------------------------------------------------------------------------------------
+    // Helper Methods
+    //----------------------------------------------------------------------------------------------
 
     private void withEncoder() {
         for(DcMotor motor: motors) {
@@ -180,9 +180,9 @@ public class Robot {
         strafeMotor.setTargetPosition(Calculator.getTicks(strafeTarget));
     }
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-    /////////////////////////////////// AUTONOMOUS METHODS /////////////////////////////////////////
-    ////////////////////////////////////////////////////////////////////////////////////////////////
+    //----------------------------------------------------------------------------------------------
+    // Autonomous Methods
+    //----------------------------------------------------------------------------------------------
 
     public void delatch() {
         liftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -213,31 +213,16 @@ public class Robot {
     }
 
     private double checkDirection() {
-        double correction, angle, gain = .10;
-        angle = getAngle();
-
-        if (angle == 0)
-            correction = 0;
-        else
-            correction = -angle;
-
-        correction = correction * gain;
+        double angle = getAngle();
+        double correction = ((angle == 0) ? 0 : -angle) * .10;
         return correction;
     }
 
     public void rotate(int degrees) {
-        double  leftPower, rightPower;
-
         resetAngle();
-        if (degrees < 0) {
-            leftPower = -power;
-            rightPower = power;
-        }
-        else if (degrees > 0) {
-            leftPower = power;
-            rightPower = -power;
-        }
-        else return;
+        double leftPower = (degrees < 0) ? -power : power;
+        double rightPower = (degrees < 0) ? power : -power;
+        if(degrees == 0) return;
 
         setPower(leftPower, rightPower);
 
